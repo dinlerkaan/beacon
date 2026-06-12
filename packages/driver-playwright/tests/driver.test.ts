@@ -67,3 +67,17 @@ describe("PlaywrightDriver — type", () => {
     expect(result.length).toBeGreaterThan(0)
   })
 })
+
+describe("PlaywrightDriver — hover + wait", () => {
+  it("records hover with bbox and wait with duration", async () => {
+    const def = showcase("Hover", { target: server.url }, async (s) => {
+      await s.hover("#submit")
+      await s.wait(50)
+    })
+    const snap = await runShowcase(def, { outDir })
+    const hover = snap.events.find((e) => e.op.kind === "hover")
+    const wait = snap.events.find((e) => e.op.kind === "wait")
+    expect(hover?.targetBBox).toBeDefined()
+    expect(wait?.op).toMatchObject({ kind: "wait", ms: 50 })
+  })
+})

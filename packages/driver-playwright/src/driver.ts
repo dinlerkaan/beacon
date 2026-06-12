@@ -7,6 +7,8 @@ import { dispatch, type HandlerCtx } from "./handlers/index.js"
 import "./handlers/navigate.js"  // ensure handlers register on import
 import "./handlers/click.js"
 import "./handlers/type.js"
+import "./handlers/hover.js"
+import "./handlers/wait.js"
 
 export interface RunOptions {
   outDir: string                    // dir for frames + capture.json
