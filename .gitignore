@@ -4,3 +4,5 @@ out/
 .beacon-cache/
 *.log
 .DS_Store
+*.js
+tsconfig.tsbuildinfo

@@ -4,6 +4,8 @@ import { Background } from "../src/components/Background"
 import { Cursor } from "../src/components/Cursor"
 import { ClickRipple } from "../src/components/ClickRipple"
 import { ZoomLayer } from "../src/components/ZoomLayer"
+import { Callout } from "../src/components/Callout"
+import { Caption } from "../src/components/Caption"
 
 describe("Background", () => {
   it("renders a gradient padded container with rounded chrome", () => {
@@ -76,5 +78,24 @@ describe("ZoomLayer", () => {
     )
     const wrapper = container.firstChild as HTMLElement
     expect(wrapper.style.transform === "" || wrapper.style.transform.includes("scale(1")).toBe(true)
+  })
+})
+
+describe("Callout", () => {
+  it("renders text with dim overlay when active", () => {
+    const { container, getByText } = render(
+      <Callout text="Click here" bbox={{ x: 100, y: 100, w: 50, h: 30 }} side="bottom" viewportW={800} viewportH={600} />,
+    )
+    expect(getByText("Click here")).toBeTruthy()
+    expect(container.querySelector('[data-beacon="callout-dim"]')).toBeTruthy()
+  })
+})
+
+describe("Caption", () => {
+  it("renders text in a lower-third bar", () => {
+    const { container, getByText } = render(<Caption text="Welcome" />)
+    expect(getByText("Welcome")).toBeTruthy()
+    const bar = container.querySelector('[data-beacon="caption"]') as HTMLElement
+    expect(bar.style.bottom).not.toBe("")
   })
 })
