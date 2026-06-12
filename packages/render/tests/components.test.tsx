@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest"
 import { render } from "@testing-library/react"
 import { Background } from "../src/components/Background"
 import { Cursor } from "../src/components/Cursor"
+import { ClickRipple } from "../src/components/ClickRipple"
+import { ZoomLayer } from "../src/components/ZoomLayer"
 
 describe("Background", () => {
   it("renders a gradient padded container with rounded chrome", () => {
@@ -34,5 +36,45 @@ describe("Cursor", () => {
     // cubic ease at t=0.5 is exactly 0.5; we accept anything in (200, 800) — should NOT be 0 or 1000
     expect(x).toBeGreaterThan(200)
     expect(x).toBeLessThan(800)
+  })
+})
+
+describe("ClickRipple", () => {
+  it("renders a circle that grows from start to end frame", () => {
+    const { container, rerender } = render(<ClickRipple frame={0} fps={30} startFrame={0} durationFrames={15} x={100} y={100} />)
+    const initial = container.querySelector('[data-beacon="ripple"]') as HTMLElement
+    const r0 = parseFloat(initial.style.width)
+
+    rerender(<ClickRipple frame={14} fps={30} startFrame={0} durationFrames={15} x={100} y={100} />)
+    const later = container.querySelector('[data-beacon="ripple"]') as HTMLElement
+    const r1 = parseFloat(later.style.width)
+    expect(r1).toBeGreaterThan(r0)
+  })
+
+  it("renders nothing outside its active window", () => {
+    const { container } = render(<ClickRipple frame={100} fps={30} startFrame={0} durationFrames={15} x={100} y={100} />)
+    expect(container.querySelector('[data-beacon="ripple"]')).toBeNull()
+  })
+})
+
+describe("ZoomLayer", () => {
+  it("scales children when active bbox supplied", () => {
+    const { container } = render(
+      <ZoomLayer viewportW={1440} viewportH={900} bbox={{ x: 100, y: 100, w: 200, h: 100 }} factor={2}>
+        <div data-testid="zoomed" />
+      </ZoomLayer>,
+    )
+    const wrapper = container.firstChild as HTMLElement
+    expect(wrapper.style.transform).toContain("scale(2")
+  })
+
+  it("renders identity transform when no bbox supplied", () => {
+    const { container } = render(
+      <ZoomLayer viewportW={1440} viewportH={900}>
+        <div />
+      </ZoomLayer>,
+    )
+    const wrapper = container.firstChild as HTMLElement
+    expect(wrapper.style.transform === "" || wrapper.style.transform.includes("scale(1")).toBe(true)
   })
 })

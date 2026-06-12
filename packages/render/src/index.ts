@@ -1,2 +1,4 @@
 export { Background } from "./components/Background.js"
 export { Cursor, type CursorKeyframe } from "./components/Cursor.js"
+export { ClickRipple } from "./components/ClickRipple.js"
+export { ZoomLayer, type BBox } from "./components/ZoomLayer.js"
