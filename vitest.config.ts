@@ -5,5 +5,8 @@ export default defineConfig({
     include: ["packages/*/tests/**/*.test.{ts,tsx}"],
     testTimeout: 30_000,
     hookTimeout: 30_000,
+    environmentMatchGlobs: [
+      ["packages/render/**", "jsdom"],
+    ],
   },
 })
