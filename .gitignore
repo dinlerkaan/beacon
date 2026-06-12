@@ -1,0 +1,6 @@
+node_modules/
+dist/
+out/
+.beacon-cache/
+*.log
+.DS_Store
