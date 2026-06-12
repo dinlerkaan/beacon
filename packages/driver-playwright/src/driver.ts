@@ -50,9 +50,6 @@ export async function runShowcase(
       } catch { /* page may be navigating */ }
     }
 
-    // Expose captureFrame on ctx so handlers can capture frames imperatively
-    ;(ctx as HandlerCtx & { captureFrame: () => Promise<void> }).captureFrame = captureFrame
-
     // Capture an initial frame after the auto-navigate
     await captureFrame()
 
