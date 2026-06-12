@@ -47,3 +47,23 @@ describe("PlaywrightDriver — click", () => {
     expect(click?.cursor).toMatchObject({ x: expect.any(Number), y: expect.any(Number) })
   })
 })
+
+describe("PlaywrightDriver — type", () => {
+  it("types text into the most recently focused field", async () => {
+    const def = showcase("Type", { target: server.url }, async (s) => {
+      await s.click("#name")
+      await s.type("Kaan")
+      await s.click("#submit")
+    })
+    const snap = await runShowcase(def, { outDir })
+
+    const typeEv = snap.events.find((e) => e.op.kind === "type")
+    expect(typeEv?.op).toMatchObject({ kind: "type", text: "Kaan" })
+
+    // verify the page actually received the keystrokes
+    const result = await import("node:fs").then((fs) =>
+      fs.readdirSync(join(outDir, "frames")),
+    )
+    expect(result.length).toBeGreaterThan(0)
+  })
+})

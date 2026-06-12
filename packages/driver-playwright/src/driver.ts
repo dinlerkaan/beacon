@@ -6,6 +6,7 @@ import type { ShowcaseDef, ShowcaseRunner } from "@beacon/core"
 import { dispatch, type HandlerCtx } from "./handlers/index.js"
 import "./handlers/navigate.js"  // ensure handlers register on import
 import "./handlers/click.js"
+import "./handlers/type.js"
 
 export interface RunOptions {
   outDir: string                    // dir for frames + capture.json
