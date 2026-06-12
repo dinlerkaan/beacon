@@ -33,3 +33,17 @@ describe("PlaywrightDriver — skeleton", () => {
     expect(snapshot.frames.length).toBeGreaterThan(0)
   })
 })
+
+describe("PlaywrightDriver — click", () => {
+  it("records click with targetBBox and cursor position", async () => {
+    const def = showcase("Click", { target: server.url }, async (s) => {
+      await s.click("#submit")
+    })
+    const snap = await runShowcase(def, { outDir })
+
+    const click = snap.events.find((e) => e.op.kind === "click")
+    expect(click).toBeDefined()
+    expect(click?.targetBBox).toMatchObject({ x: expect.any(Number), y: expect.any(Number), w: expect.any(Number), h: expect.any(Number) })
+    expect(click?.cursor).toMatchObject({ x: expect.any(Number), y: expect.any(Number) })
+  })
+})
