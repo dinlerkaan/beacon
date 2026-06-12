@@ -9,6 +9,9 @@ import "./handlers/click.js"
 import "./handlers/type.js"
 import "./handlers/hover.js"
 import "./handlers/wait.js"
+import "./handlers/callout.js"
+import "./handlers/zoom.js"
+import "./handlers/caption.js"
 
 export interface RunOptions {
   outDir: string                    // dir for frames + capture.json

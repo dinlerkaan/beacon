@@ -81,3 +81,34 @@ describe("PlaywrightDriver — hover + wait", () => {
     expect(wait?.op).toMatchObject({ kind: "wait", ms: 50 })
   })
 })
+
+describe("PlaywrightDriver — annotations", () => {
+  it("records callout with bbox if target selector provided", async () => {
+    const def = showcase("Callout", { target: server.url }, async (s) => {
+      await s.callout("Submit here", { target: "#submit", duration: 1500, side: "bottom" })
+    })
+    const snap = await runShowcase(def, { outDir })
+    const ev = snap.events.find((e) => e.op.kind === "callout")!
+    expect(ev.op).toMatchObject({ kind: "callout", text: "Submit here", duration: 1500 })
+    expect(ev.targetBBox).toBeDefined()
+  })
+
+  it("records zoom event with bbox when selector provided", async () => {
+    const def = showcase("Zoom", { target: server.url }, async (s) => {
+      await s.zoom({ selector: "#title", factor: 2 })
+    })
+    const snap = await runShowcase(def, { outDir })
+    const ev = snap.events.find((e) => e.op.kind === "zoom")!
+    expect(ev.op).toMatchObject({ kind: "zoom", factor: 2 })
+    expect(ev.targetBBox).toBeDefined()
+  })
+
+  it("records caption with default duration if unspecified", async () => {
+    const def = showcase("Caption", { target: server.url }, async (s) => {
+      await s.caption("Welcome")
+    })
+    const snap = await runShowcase(def, { outDir })
+    const ev = snap.events.find((e) => e.op.kind === "caption")!
+    expect(ev.op).toMatchObject({ kind: "caption", text: "Welcome" })
+  })
+})
