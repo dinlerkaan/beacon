@@ -53,10 +53,10 @@ export function buildTimeline(snap: CaptureBufferSnapshot): Timeline {
         break
       }
       case "zoom": {
-        if (ev.targetBBox) {
-          zooms.push({ startMs: ev.at, endMs: ev.at + 2000, bbox: ev.targetBBox, factor: ev.op.factor ?? 1.5 })
-          maxEndMs = Math.max(maxEndMs, ev.at + 2000)
-        }
+        const factor = ev.op.factor ?? 1.5
+        const bbox = ev.targetBBox ?? { x: width / 2, y: height / 2, w: 0, h: 0 }
+        zooms.push({ startMs: ev.at, endMs: ev.at + 2000, bbox, factor })
+        maxEndMs = Math.max(maxEndMs, ev.at + 2000)
         break
       }
       case "wait": {

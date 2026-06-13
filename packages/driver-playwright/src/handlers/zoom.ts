@@ -7,4 +7,5 @@ register("zoom", async (op, { page, buf, now }) => {
     if (box) targetBBox = { x: box.x, y: box.y, w: box.width, h: box.height }
   }
   buf.appendEvent({ at: now(), op, targetBBox })
+  await new Promise((resolve) => setTimeout(resolve, 2000))
 })

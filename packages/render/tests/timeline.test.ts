@@ -45,4 +45,24 @@ describe("buildTimeline", () => {
     expect(tl.captions.length).toBe(1)
     expect(tl.captions[0]!.text).toBe("Bye")
   })
+
+  it("zoom without selector synthesises a centre-viewport bbox and produces a zoom window", () => {
+    const snapWithZoom: CaptureBufferSnapshot = {
+      schemaVersion: 1,
+      meta: { width: 1440, height: 900, fps: 30 },
+      events: [
+        { at: 0, op: { kind: "zoom", factor: 2 } },
+      ],
+      frames: [],
+    }
+    const tl = buildTimeline(snapWithZoom)
+    expect(tl.zooms.length).toBe(1)
+    const z = tl.zooms[0]!
+    expect(z.factor).toBe(2)
+    expect(z.bbox.x).toBe(720)   // width / 2
+    expect(z.bbox.y).toBe(450)   // height / 2
+    expect(z.bbox.w).toBe(0)
+    expect(z.bbox.h).toBe(0)
+    expect(z.endMs - z.startMs).toBe(2000)
+  })
 })
