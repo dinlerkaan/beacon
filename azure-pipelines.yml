@@ -38,8 +38,11 @@ steps:
     displayName: Install Playwright Chromium
 
   - bash: |
+      # Run from workspace root so Remotion's CWD-relative node_modules/.remotion/
+      # cache matches what `pnpm test` (also run from root) reads later.
+      # The script resolves @remotion/renderer via its file location.
       for i in 1 2 3; do
-        pnpm -F @beacon/cli exec node scripts/warm-remotion-chrome.mjs && exit 0
+        node packages/cli/scripts/warm-remotion-chrome.mjs && exit 0
         echo "warm-remotion attempt $i failed, retrying..."
         sleep 5
       done

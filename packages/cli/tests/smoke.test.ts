@@ -15,6 +15,9 @@ describe("CLI smoke (subprocess)", () => {
     const result = spawnSync("pnpm", ["exec", "tsx", cliEntry, "render", exampleScript, "-o", out], {
       stdio: "inherit",
       timeout: 240_000,
+      // shell: true is required for Windows to resolve `pnpm.cmd`; without it
+      // spawn returns status: null (ENOENT) and the test fails before render.
+      shell: true,
     })
     expect(result.status).toBe(0)
     expect(existsSync(out)).toBe(true)
