@@ -1,4 +1,4 @@
-import { mkdtempSync, writeFileSync } from "node:fs"
+import { mkdtempSync, writeFileSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -54,57 +54,61 @@ export async function renderCommand(args: RenderArgs): Promise<void> {
   const def = await loadScript(scriptPath)
   const captureDir = mkdtempSync(join(tmpdir(), "beacon-capture-"))
 
-  // 1. Drive the app, capture frames + events
-  const snapshot = await runShowcase(def, {
-    outDir: captureDir,
-    fps: args.fps ?? 30,
-    viewport: args.width && args.height ? { w: args.width, h: args.height } : undefined,
-  })
-
-  const snapshotPath = join(captureDir, "capture.json")
-  writeFileSync(snapshotPath, JSON.stringify(snapshot))
-
-  // Serve frames via HTTP — Chrome Headless Shell blocks file:// resource loading
-  const framesServer = await serveDir(captureDir)
-
   try {
-    // 2. Bundle the Remotion Root (must use the entry file that calls registerRoot)
-    const rootPath = fileURLToPath(new URL("../../../render/src/remotion-entry.tsx", import.meta.url))
-    // Webpack (used by @remotion/bundler) can't resolve .js → .tsx without an explicit
-    // resolve.extensionAlias. All render-package imports use ESM-style ".js" extensions
-    // that actually map to ".tsx"/".ts" source files.
-    const bundled = await bundle({
-      entryPoint: rootPath,
-      webpackOverride: (config) => {
-        config.resolve = config.resolve ?? {}
-        config.resolve.extensionAlias = {
-          ...(config.resolve.extensionAlias ?? {}),
-          ".js": [".tsx", ".ts", ".js"],
-        }
-        return config
-      },
+    // 1. Drive the app, capture frames + events
+    const snapshot = await runShowcase(def, {
+      outDir: captureDir,
+      fps: args.fps ?? 30,
+      viewport: args.width && args.height ? { w: args.width, h: args.height } : undefined,
     })
 
-    const inputProps = {
-      snapshot,
-      framesBaseUrl: framesServer.baseUrl,
+    const snapshotPath = join(captureDir, "capture.json")
+    writeFileSync(snapshotPath, JSON.stringify(snapshot))
+
+    // Serve frames via HTTP — Chrome Headless Shell blocks file:// resource loading
+    const framesServer = await serveDir(captureDir)
+
+    try {
+      // 2. Bundle the Remotion Root (must use the entry file that calls registerRoot)
+      const rootPath = fileURLToPath(new URL("../../../render/src/remotion-entry.tsx", import.meta.url))
+      // Webpack (used by @remotion/bundler) can't resolve .js → .tsx without an explicit
+      // resolve.extensionAlias. All render-package imports use ESM-style ".js" extensions
+      // that actually map to ".tsx"/".ts" source files.
+      const bundled = await bundle({
+        entryPoint: rootPath,
+        webpackOverride: (config) => {
+          config.resolve = config.resolve ?? {}
+          config.resolve.extensionAlias = {
+            ...(config.resolve.extensionAlias ?? {}),
+            ".js": [".tsx", ".ts", ".js"],
+          }
+          return config
+        },
+      })
+
+      const inputProps = {
+        snapshot,
+        framesBaseUrl: framesServer.baseUrl,
+      }
+
+      // 3. Select composition + render
+      const composition = await selectComposition({
+        serveUrl: bundled,
+        id: "BeaconShowcase",
+        inputProps,
+      })
+
+      await renderMedia({
+        composition,
+        serveUrl: bundled,
+        codec: "h264",
+        outputLocation: outPath,
+        inputProps,
+      })
+    } finally {
+      await framesServer.close()
     }
-
-    // 3. Select composition + render
-    const composition = await selectComposition({
-      serveUrl: bundled,
-      id: "BeaconShowcase",
-      inputProps,
-    })
-
-    await renderMedia({
-      composition,
-      serveUrl: bundled,
-      codec: "h264",
-      outputLocation: outPath,
-      inputProps,
-    })
   } finally {
-    await framesServer.close()
+    rmSync(captureDir, { recursive: true, force: true })
   }
 }
