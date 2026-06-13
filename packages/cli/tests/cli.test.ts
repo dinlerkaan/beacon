@@ -5,6 +5,7 @@ import { tmpdir } from "node:os"
 import { fileURLToPath } from "node:url"
 import { loadScript } from "../src/load-script"
 import { renderCommand } from "../src/commands/render"
+import { initCommand } from "../src/commands/init"
 import { startFixtureServer } from "../../driver-playwright/tests/fixture-server"
 
 const __dirname = join(fileURLToPath(import.meta.url), "..", "..", "..", "..")
@@ -72,4 +73,16 @@ describe("renderCommand (end-to-end)", () => {
       await server.close()
     }
   }, 180_000)
+})
+
+describe("initCommand", () => {
+  it("scaffolds package.json and a sample showcase script", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "beacon-init-"))
+    await initCommand({ dir })
+    expect(existsSync(join(dir, "package.json"))).toBe(true)
+    expect(existsSync(join(dir, "showcase.ts"))).toBe(true)
+    const { readFileSync } = await import("node:fs")
+    const sample = readFileSync(join(dir, "showcase.ts"), "utf8")
+    expect(sample).toContain("showcase(")
+  })
 })

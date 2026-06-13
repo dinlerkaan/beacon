@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { Command } from "commander"
 import { renderCommand } from "./commands/render.js"
+import { initCommand } from "./commands/init.js"
+import { previewCommand } from "./commands/preview.js"
 
 const program = new Command()
 program.name("beacon").description("Beacon — showcase-animation tool").version("0.0.0")
@@ -22,6 +24,24 @@ program
       height: opts.height ? parseInt(opts.height, 10) : undefined,
     })
     console.log(`rendered ${opts.out}`)
+  })
+
+program
+  .command("init")
+  .description("Scaffold a new showcase project")
+  .argument("<dir>")
+  .option("--name <name>", "package name")
+  .action(async (dir: string, opts: { name?: string }) => {
+    await initCommand({ dir, name: opts.name })
+    console.log(`✔ initialised ${dir}`)
+  })
+
+program
+  .command("preview")
+  .description("Open the Remotion Studio for live preview")
+  .argument("<script>")
+  .action(async (script: string) => {
+    await previewCommand({ script })
   })
 
 await program.parseAsync()
