@@ -50,7 +50,7 @@ const driverPkg = JSON.parse(
 )
 
 const publishPkg = {
-  name: "@dinlerkaan/beacon",
+  name: "@boomarche/beacon",
   version: process.env.PUBLISH_VERSION ?? rootPkg.version ?? "0.1.0",
   description:
     "Scripted feature-showcase animations: drive a web app with Playwright, render polished MP4s with Remotion.",
@@ -66,14 +66,15 @@ const publishPkg = {
   ],
   author: "Kaan Dinler",
   license: "MIT",
-  homepage: "https://github.com/dinlerkaan/beacon#readme",
+  homepage: "https://github.com/boomarche/beacon#readme",
   repository: {
     type: "git",
-    url: "git+https://github.com/dinlerkaan/beacon.git",
+    url: "git+https://github.com/boomarche/beacon.git",
   },
-  bugs: { url: "https://github.com/dinlerkaan/beacon/issues" },
+  bugs: { url: "https://github.com/boomarche/beacon/issues" },
   type: "module",
-  bin: { beacon: "./dist/cli/index.js" },
+  // npm 11 strips leading "./" from bin entries — write the canonical form.
+  bin: { beacon: "dist/cli/index.js" },
   exports: {
     ".": {
       types: "./dist/lib/index.d.ts",

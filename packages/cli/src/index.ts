@@ -6,7 +6,7 @@ import { previewCommand } from "./commands/preview.js"
 import { recordCommand } from "./commands/record.js"
 
 const program = new Command()
-program.name("beacon").description("Beacon — showcase-animation tool").version("0.0.0")
+program.name("beacon").description("Beacon — showcase-animation tool").version("0.1.0")
 
 program
   .command("render")
