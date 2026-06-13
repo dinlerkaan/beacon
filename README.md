@@ -13,7 +13,7 @@ Scripted feature-showcase animations. Drive a web app with Playwright, render po
 ## Install
 
 ```sh
-npm install -g @dinlerkaan/beacon
+npm install -g @boomarche/beacon
 beacon --help
 ```
 
@@ -34,7 +34,7 @@ beacon render demo.ts -o demo.mp4
 
 ```ts
 // demo.ts
-import { showcase } from "@dinlerkaan/beacon"
+import { showcase } from "@boomarche/beacon"
 
 export default showcase(
   "My feature demo",
@@ -112,7 +112,7 @@ This boundary is what lets the renderer stay decoupled from the capture mechanis
 
 ## Status
 
-v1. Used in production for Boomarche showcases; cross-platform CI on macOS / Windows / Linux. Issues and PRs welcome at [github.com/dinlerkaan/beacon](https://github.com/dinlerkaan/beacon).
+v1. Used in production for Boomarche showcases; cross-platform CI on macOS / Windows / Linux. Issues and PRs welcome at [github.com/boomarche/beacon](https://github.com/boomarche/beacon).
 
 ## License
 
