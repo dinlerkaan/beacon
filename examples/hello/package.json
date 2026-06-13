@@ -1,0 +1,11 @@
+{
+  "name": "beacon-example-hello",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "beacon render hello.beacon.ts -o hello.mp4"
+  },
+  "dependencies": {
+    "@beacon/core": "workspace:*"
+  }
+}

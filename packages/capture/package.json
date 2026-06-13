@@ -1,0 +1,9 @@
+{
+  "name": "@beacon/capture",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "dependencies": { "@beacon/core": "workspace:*" }
+}

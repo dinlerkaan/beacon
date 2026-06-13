@@ -1,0 +1,21 @@
+{
+  "name": "@beacon/cli",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "bin": { "beacon": "./src/index.ts" },
+  "scripts": {
+    "beacon": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@beacon/core": "workspace:*",
+    "@beacon/capture": "workspace:*",
+    "@beacon/driver-playwright": "workspace:*",
+    "@beacon/render": "workspace:*",
+    "@remotion/bundler": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/renderer": "^4.0.0",
+    "commander": "^12.0.0",
+    "tsx": "^4.19.0"
+  }
+}
