@@ -52,7 +52,7 @@ program
   .option("-o, --out <file>", "output .ts script path", "showcase.ts")
   .option("--title <title>", "showcase title (defaults to hostname)")
   .option("--no-auto-wait", "skip inserting auto-detected pauses between actions")
-  .option("--callouts", "after recording, prompt for a callout before each action")
+  .option("--callouts", "after recording, pick actions to annotate with callouts (TUI)")
   .action(
     async (
       url: string,

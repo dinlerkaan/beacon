@@ -10,8 +10,7 @@ import {
 import { tmpdir } from "node:os"
 import { join, resolve } from "node:path"
 import { createRequire } from "node:module"
-import { createInterface } from "node:readline/promises"
-import { stdin, stdout } from "node:process"
+import * as p from "@clack/prompts"
 import {
   translatePlaywrightScript,
   insertAutoWaits,
@@ -166,23 +165,42 @@ async function promptForCallouts(
   ops: RecordedOp[],
   actionIndexes: number[],
 ): Promise<(string | null)[]> {
-  const rl = createInterface({ input: stdin, output: stdout })
   const prompts: (string | null)[] = new Array(actionIndexes.length).fill(null)
 
-  try {
-    console.log(
-      `\nRecorded ${actionIndexes.length} action(s). Add callouts (enter = skip, q = stop):\n`,
-    )
-    for (let i = 0; i < actionIndexes.length; i++) {
-      const idx = actionIndexes[i]!
-      const summary = idx < 0 ? "navigate (target URL)" : summariseOp(ops[idx]!)
-      const ans = (await rl.question(`  [${i + 1}/${actionIndexes.length}] ${summary}\n        callout? `)).trim()
-      if (ans === "q" || ans === "Q") break
-      if (ans.length > 0) prompts[i] = ans
-    }
-  } finally {
-    rl.close()
+  p.intro(`Recorded ${actionIndexes.length} action(s)`)
+
+  const labels = actionIndexes.map((idx) =>
+    idx < 0 ? "navigate (target URL)" : summariseOp(ops[idx]!),
+  )
+
+  const selected = await p.multiselect({
+    message: "Which actions should have a callout before them? (space = toggle, enter = confirm)",
+    options: labels.map((label, i) => ({ value: i, label })),
+    required: false,
+  })
+
+  if (p.isCancel(selected)) {
+    p.outro("No callouts added.")
+    return prompts
   }
+  const indices = selected as number[]
+  if (indices.length === 0) {
+    p.outro("No callouts added.")
+    return prompts
+  }
+
+  for (const i of indices) {
+    const text = await p.text({
+      message: `Callout before: ${labels[i]}`,
+      placeholder: "e.g. Strict ethical stock screening",
+      validate: (v) => (v.trim() === "" ? "Callout text is required (or cancel to skip)" : undefined),
+    })
+    if (p.isCancel(text)) continue
+    prompts[i] = String(text).trim()
+  }
+
+  const added = prompts.filter((x) => x !== null).length
+  p.outro(`${added} callout${added === 1 ? "" : "s"} added.`)
   return prompts
 }
 
