@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url"
 import { createServer, type Server } from "node:http"
 import { runShowcase } from "@beacon/driver-playwright"
 import { loadScript } from "../load-script.js"
+import { resolveRemotionEntry } from "../resolve-render-entry.js"
 
 export interface PreviewArgs {
   script: string
@@ -53,7 +54,7 @@ export async function previewCommand(args: PreviewArgs): Promise<void> {
     const framesServer = await serveDir(captureDir)
 
     try {
-      const rootPath = fileURLToPath(new URL("../../../render/src/remotion-entry.tsx", import.meta.url))
+      const rootPath = resolveRemotionEntry()
       const child = spawn("pnpm", ["exec", "remotion", "studio", rootPath], {
         stdio: "inherit",
         env: {

@@ -9,6 +9,7 @@ import { bundle } from "@remotion/bundler"
 import { renderMedia, selectComposition } from "@remotion/renderer"
 import { runShowcase } from "@beacon/driver-playwright"
 import { loadScript } from "../load-script.js"
+import { resolveRemotionEntry } from "../resolve-render-entry.js"
 
 export interface RenderArgs {
   script: string   // path to .ts showcase file
@@ -70,7 +71,7 @@ export async function renderCommand(args: RenderArgs): Promise<void> {
 
     try {
       // 2. Bundle the Remotion Root (must use the entry file that calls registerRoot)
-      const rootPath = fileURLToPath(new URL("../../../render/src/remotion-entry.tsx", import.meta.url))
+      const rootPath = resolveRemotionEntry()
       // Webpack (used by @remotion/bundler) can't resolve .js → .tsx without an explicit
       // resolve.extensionAlias. All render-package imports use ESM-style ".js" extensions
       // that actually map to ".tsx"/".ts" source files.

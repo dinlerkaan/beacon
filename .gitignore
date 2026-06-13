@@ -2,6 +2,8 @@ node_modules/
 dist/
 out/
 .beacon-cache/
+dist-publish/
+*.tgz
 *.log
 *.mp4
 .DS_Store
