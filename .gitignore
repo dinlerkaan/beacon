@@ -3,6 +3,7 @@ dist/
 out/
 .beacon-cache/
 *.log
+*.mp4
 .DS_Store
 *.js
 tsconfig.tsbuildinfo
