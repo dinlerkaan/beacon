@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest"
-import { mkdtempSync, writeFileSync, rmSync, existsSync, statSync } from "node:fs"
+import { mkdirSync, mkdtempSync, writeFileSync, rmSync, existsSync, statSync } from "node:fs"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
 import { fileURLToPath } from "node:url"
@@ -15,6 +15,8 @@ let testDir: string
 
 describe("loadScript", () => {
   beforeAll(() => {
+    // .beacon-cache/ is gitignored, so on a fresh CI checkout it doesn't exist.
+    mkdirSync(WORKSPACE_CACHE, { recursive: true })
     // Create a temp directory within the workspace to ensure node_modules are resolvable
     testDir = mkdtempSync(join(WORKSPACE_CACHE, "load-"))
   })

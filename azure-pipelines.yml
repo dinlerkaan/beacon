@@ -37,6 +37,15 @@ steps:
   - script: pnpm -F @beacon/driver-playwright exec playwright install --with-deps chromium
     displayName: Install Playwright Chromium
 
+  - bash: |
+      for i in 1 2 3; do
+        pnpm -F @beacon/cli exec node scripts/warm-remotion-chrome.mjs && exit 0
+        echo "warm-remotion attempt $i failed, retrying..."
+        sleep 5
+      done
+      exit 1
+    displayName: Pre-download Remotion Chrome (3x retry)
+
   - script: pnpm typecheck
     displayName: Typecheck
 
