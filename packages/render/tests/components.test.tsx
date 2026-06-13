@@ -16,6 +16,7 @@ describe("Background", () => {
     const chrome = container.querySelector('[data-beacon="chrome"]') as HTMLElement
     expect(chrome).toBeTruthy()
     expect(chrome.style.borderRadius).not.toBe("")
+    expect(chrome.style.position).toBe("relative")
   })
 })
 

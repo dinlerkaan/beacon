@@ -31,6 +31,7 @@ export function Background({
           overflow: "hidden",
           boxShadow: "0 30px 80px rgba(0,0,0,0.5)",
           background: "#fff",
+          position: "relative",
         }}
       >
         {children}
