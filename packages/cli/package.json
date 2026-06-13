@@ -1,0 +1,15 @@
+{
+  "name": "@beacon/cli",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "bin": { "beacon": "./src/index.ts" },
+  "dependencies": {
+    "@beacon/core": "workspace:*",
+    "@beacon/capture": "workspace:*",
+    "@beacon/driver-playwright": "workspace:*",
+    "@beacon/render": "workspace:*",
+    "commander": "^12.0.0",
+    "tsx": "^4.19.0"
+  }
+}
