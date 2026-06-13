@@ -18,6 +18,9 @@ describe("CLI smoke (subprocess)", () => {
     })
     expect(result.status).toBe(0)
     expect(existsSync(out)).toBe(true)
-    expect(statSync(out).size).toBeGreaterThan(10_000)
+    // hello.beacon.ts runs ~4s of content; a stubbed/fallback render
+    // is ~15 frames (0.5s) and lands around 100KB. Anything under that
+    // threshold means durationInFrames was computed from empty events.
+    expect(statSync(out).size).toBeGreaterThan(150_000)
   }, 300_000)
 })
