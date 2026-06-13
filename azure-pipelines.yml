@@ -34,7 +34,7 @@ steps:
   - script: pnpm install --frozen-lockfile
     displayName: pnpm install
 
-  - script: pnpm exec playwright install --with-deps chromium
+  - script: pnpm -F @beacon/driver-playwright exec playwright install --with-deps chromium
     displayName: Install Playwright Chromium
 
   - script: pnpm typecheck
