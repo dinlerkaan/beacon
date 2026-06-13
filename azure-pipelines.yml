@@ -1,0 +1,44 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+strategy:
+  matrix:
+    linux:
+      imageName: ubuntu-latest
+    mac:
+      imageName: macOS-latest
+    windows:
+      imageName: windows-latest
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: 22.x
+    displayName: Install Node.js 22
+
+  - script: |
+      corepack enable
+      corepack prepare pnpm@9.10.0 --activate
+    displayName: Install pnpm 9.10
+
+  - script: pnpm install --frozen-lockfile
+    displayName: pnpm install
+
+  - script: pnpm exec playwright install --with-deps chromium
+    displayName: Install Playwright Chromium
+
+  - script: pnpm typecheck
+    displayName: Typecheck
+
+  - script: pnpm test
+    displayName: Run tests
