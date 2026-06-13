@@ -3,6 +3,7 @@ import { Command } from "commander"
 import { renderCommand } from "./commands/render.js"
 import { initCommand } from "./commands/init.js"
 import { previewCommand } from "./commands/preview.js"
+import { recordCommand } from "./commands/record.js"
 
 const program = new Command()
 program.name("beacon").description("Beacon — showcase-animation tool").version("0.0.0")
@@ -42,6 +43,16 @@ program
   .argument("<script>")
   .action(async (script: string) => {
     await previewCommand({ script })
+  })
+
+program
+  .command("record")
+  .description("Record a browser session and emit a Beacon showcase script")
+  .argument("<url>", "URL to open in the recording browser")
+  .option("-o, --out <file>", "output .ts script path", "showcase.ts")
+  .option("--title <title>", "showcase title (defaults to hostname)")
+  .action(async (url: string, opts: { out: string; title?: string }) => {
+    await recordCommand({ url, out: opts.out, title: opts.title })
   })
 
 await program.parseAsync()
