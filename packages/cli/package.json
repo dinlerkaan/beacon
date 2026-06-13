@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "type": "module",
   "main": "./src/index.ts",
-  "bin": { "beacon": "./src/index.ts" },
+  "bin": { "beacon": "./bin/beacon.mjs" },
   "scripts": {
     "beacon": "tsx src/index.ts"
   },

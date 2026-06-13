@@ -6,6 +6,7 @@
     "render": "beacon render hello.beacon.ts -o hello.mp4"
   },
   "dependencies": {
-    "@beacon/core": "workspace:*"
+    "@beacon/core": "workspace:*",
+    "@beacon/cli": "workspace:*"
   }
 }

@@ -26,6 +26,9 @@ importers:
 
   examples/hello:
     dependencies:
+      '@beacon/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
       '@beacon/core':
         specifier: workspace:*
         version: link:../../packages/core
