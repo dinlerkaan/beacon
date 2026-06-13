@@ -18,7 +18,7 @@ export async function previewCommand(args: PreviewArgs): Promise<void> {
   const snapshotPath = join(captureDir, "capture.json")
   writeFileSync(snapshotPath, JSON.stringify(snapshot))
 
-  const rootPath = fileURLToPath(new URL("../../../render/src/Root.tsx", import.meta.url))
+  const rootPath = fileURLToPath(new URL("../../../render/src/remotion-entry.tsx", import.meta.url))
   const child = spawn("pnpm", ["exec", "remotion", "studio", rootPath], {
     stdio: "inherit",
     env: {
