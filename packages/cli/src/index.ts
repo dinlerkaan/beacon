@@ -51,8 +51,21 @@ program
   .argument("<url>", "URL to open in the recording browser")
   .option("-o, --out <file>", "output .ts script path", "showcase.ts")
   .option("--title <title>", "showcase title (defaults to hostname)")
-  .action(async (url: string, opts: { out: string; title?: string }) => {
-    await recordCommand({ url, out: opts.out, title: opts.title })
-  })
+  .option("--no-auto-wait", "skip inserting auto-detected pauses between actions")
+  .option("--callouts", "after recording, prompt for a callout before each action")
+  .action(
+    async (
+      url: string,
+      opts: { out: string; title?: string; autoWait: boolean; callouts?: boolean },
+    ) => {
+      await recordCommand({
+        url,
+        out: opts.out,
+        title: opts.title,
+        autoWait: opts.autoWait,
+        callouts: opts.callouts,
+      })
+    },
+  )
 
 await program.parseAsync()
